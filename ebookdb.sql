@@ -123,3 +123,85 @@ CREATE TABLE notice(
 
 DROP SEQUENCE notice_seq;
 CREATE SEQUENCE notice_seq START WITH 1 INCREMENT BY 1;
+
+---------------샘플데이터-----------------------
+
+--관리자
+insert into manager values('admin', '1234', '관리자', '010-1111-1111');
+
+
+--사용자
+insert into member(id, pwd, name, email, zip_num, address, phone) values
+('one', '1111', '김형주', '06129', '서울특별시 강남구 강남대로96길 16', '017-777-7777');
+insert into member(id, pwd, name, zip_num, address, phone) values
+('two', '2222', '김민진', '06129', '서울특별시 강남구 역삼동 818-3', '011-123-4567');
+
+--책
+insert into product(bseq, title, category, price, content, image) values(
+product_seq.nextval, '책1', '2', '4000', '책 샘플1 입니다.', 'book1.jpg');
+insert into product(bseq, title, category, price, content, image, bestyn) values(
+product_seq.nextval, '책2', '2', '5000','책 샘플2 입니다.', 'book2.jpg', 'n');
+insert into product(bseq,  title, category, price, content, image, bestyn) values( 
+product_seq.nextval, '책3', '1', '10000', '책 샘플3 입니다.', 'book3.jpg', 'n');
+insert into product(bseq,  title, category, price, content, image, bestyn) values(
+product_seq.nextval, '책4', '4', '1200', '책 샘플4 입니다.', 'book4.jpg', 'y');
+insert into product(bseq,  title, category, price, content, image, bestyn) values(
+product_seq.nextval, '책5', '1', '1500', '책 샘플5 입니다.', 'book5.jpg', 'n');
+insert into product(bseq,  title, category, price, content, image) values(
+product_seq.nextval, '책6', '6', '2100', '책 샘플6 입니다.', 'book6.jpg');
+insert into product(bseq,  title, category, price, content, image, bestyn) values(
+product_seq.nextval, '책7', '3', '5500', '책 샘플7 입니다.', 'book7.jpg', 'y');
+insert into product(bseq,  title, category, price, content, image, bestyn) values(
+product_seq.nextval, '책8', '3', '6000', '책 샘플8 입니다.', 'book8.jpg', 'y');
+insert into product(bseq,  title, category, price, content, image) values(
+product_seq.nextval,  '책9', '4', '15000', '책 샘플9 입니다.', 'book9.jpg');
+insert into product(bseq,  title, category, price, content, image, bestyn) values(
+product_seq.nextval, '책10', '6', '3000', '책 샘플10 입니다.', 'book10.jpg','n');
+insert into product(bseq,  title, category, price, content, image, bestyn) values(
+product_seq.nextval, '책11', '5', '11000', '책 샘플11 입니다.', 'book11.jpg','n');
+insert into product(bseq,  title, category, price, content, image, bestyn) values(
+product_seq.nextval, '책12', '5', '12000', '책 샘플12 입니다.', 'book11.jpg','n');
+
+-- 장바구니
+insert into cart(cseq, id, bseq) values(cart_seq.nextval, 'one', 1);
+
+-- 주문
+insert into orders(oseq, id) values(orders_seq.nextval, 'one');
+insert into orders(oseq, id) values(orders_seq.nextval, 'one');
+insert into orders(oseq, id) values(orders_seq.nextval, 'two');
+
+-- 주문 상세
+insert into order_detail(odseq, oseq, bseq) 
+values(order_detail_seq.nextval, 1, 1);
+insert into order_detail(odseq, oseq, bseq) 
+values(order_detail_seq.nextval, 1, 2);
+insert into order_detail(odseq, oseq, bseq) 
+values(order_detail_seq.nextval, 2,  4);
+insert into order_detail(odseq, oseq, bseq) 
+values(order_detail_seq.nextval, 3, 3);
+insert into order_detail(odseq, oseq, bseq) 
+values(order_detail_seq.nextval, 3, 2);
+insert into order_detail(odseq, oseq, bseq) 
+values(order_detail_seq.nextval, 3, 6);
+insert into order_detail(odseq, oseq, bseq) 
+values(order_detail_seq.nextval, 3, 1);
+
+-- QnA
+insert into qna (qseq, subject, content, id)
+values(qna_seq.nextval, '테스트', '질문내용1', 'one');
+update qna SET reply='답변내용', rep='y';
+
+insert into qna (qseq, subject, content, id)
+values(qna_seq.nextval, '테스트2', '질문내용2', 'one');
+
+-- notice
+insert into qna (nseq, subject, content, id)
+values(notice_seq.nextval, '공지1', '공지사항 샘플1', 'admin');
+update qna SET reply='답변내용', rep='y';
+
+insert into qna (nseq, subject, content, id)
+values(notice_seq.nextval, '공지2', '공지사항 샘플2', 'admin');
+commit;
+
+
+--------------------------------------------------
