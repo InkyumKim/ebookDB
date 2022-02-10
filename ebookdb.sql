@@ -209,6 +209,7 @@ commit;
 --우편번호 테이블 생성 및 데이터 insert
 @zip;
 
+DROP VIEW best_book_view;
 --조회시 간단하게 조회하기위해 뷰로 생성
 --베스트 상품 조회 뷰
 CREATE OR REPLACE VIEW best_book_view AS
@@ -219,6 +220,7 @@ FROM (SELECT row_number() OVER(ORDER BY regdate)row_num, bseq, title, price, ima
 WHERE row_num <= 4 ;
 
 
+DROP VIEW new_book_view;
 --신상품 조회 뷰
 CREATE OR REPLACE VIEW new_book_view AS
 SELECT bseq, title, price, image
@@ -228,6 +230,7 @@ FROM (SELECT row_number() OVER(ORDER BY regdate)row_num, bseq, title, price, ima
 WHERE row_num <= 4 ;
 
 
+DROP VIEW cart_view;
 --장바구니 보기 View 생성
 --필요한 컬럼: 카트일련번호, 회원id, 책번호, 회원명, 책제목, 가격, 장바구니 등록일자, 처리결과
 --관련 테이블: cart, member, ebook
@@ -240,6 +243,17 @@ AND c.bseq = e.bseq
 AND result = 'n';    --주문 미처리
 
 
+DROP VIEW like_view;
+--찜하기 보기 View 생성
+--필요한 컬럼 : 책번호, 책제목, 가격, 사진
+CREATE OR REPLACE VIEW like_view AS
+SELECT bseq, title, price, image
+FROM (SELECT bseq, title, price, image
+      FROM ebook
+      WHERE likeyn = 'y');
+
+
+DROP VIEW order_view;
 --주문 내역 조회 뷰 : order_view
 --컬러명: 주문상세번호, 주문번호, 회원ID, 책번호, 책제목, 회원명, 가격, 주문일, 처리결과
 CREATE OR REPLACE VIEW order_view AS
