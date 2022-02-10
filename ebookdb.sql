@@ -137,30 +137,38 @@ insert into member(id, pwd, name, zip_num, address, phone) values
 ('two', '2222', '±è¹ÎÁø', '06129', '¼­¿ïÆ¯º°½Ã °­³²±¸ ¿ª»ïµ¿ 818-3', '011-123-4567');
 
 --Ã¥
-insert into product(bseq, title, category, price, content, image) values(
+insert into ebook(bseq, title, category, price, content, image) values(
 product_seq.nextval, 'Ã¥1', '2', '4000', 'Ã¥ »ùÇÃ1 ÀÔ´Ï´Ù.', 'book1.jpg');
-insert into product(bseq, title, category, price, content, image, bestyn) values(
+insert into ebook(bseq, title, category, price, content, image, bestyn) values(
 product_seq.nextval, 'Ã¥2', '2', '5000','Ã¥ »ùÇÃ2 ÀÔ´Ï´Ù.', 'book2.jpg', 'n');
-insert into product(bseq,  title, category, price, content, image, bestyn) values( 
+insert into ebook(bseq,  title, category, price, content, image, bestyn) values( 
 product_seq.nextval, 'Ã¥3', '1', '10000', 'Ã¥ »ùÇÃ3 ÀÔ´Ï´Ù.', 'book3.jpg', 'n');
-insert into product(bseq,  title, category, price, content, image, bestyn) values(
+insert into ebook(bseq,  title, category, price, content, image, bestyn) values(
 product_seq.nextval, 'Ã¥4', '4', '1200', 'Ã¥ »ùÇÃ4 ÀÔ´Ï´Ù.', 'book4.jpg', 'y');
-insert into product(bseq,  title, category, price, content, image, bestyn) values(
-product_seq.nextval, 'Ã¥5', '1', '1500', 'Ã¥ »ùÇÃ5 ÀÔ´Ï´Ù.', 'book5.jpg', 'n');
-insert into product(bseq,  title, category, price, content, image) values(
-product_seq.nextval, 'Ã¥6', '6', '2100', 'Ã¥ »ùÇÃ6 ÀÔ´Ï´Ù.', 'book6.jpg');
-insert into product(bseq,  title, category, price, content, image, bestyn) values(
-product_seq.nextval, 'Ã¥7', '3', '5500', 'Ã¥ »ùÇÃ7 ÀÔ´Ï´Ù.', 'book7.jpg', 'y');
-insert into product(bseq,  title, category, price, content, image, bestyn) values(
+insert into ebook(bseq,  title, category, price, content, image, bestyn) values(
+product_seq.nextval, 'Ã¥5', '1', '0', 'Ã¥ »ùÇÃ5 ÀÔ´Ï´Ù.', 'book5.jpg', 'n');
+insert into ebook(bseq,  title, category, price, content, image) values(
+product_seq.nextval, 'Ã¥6', '6', '0', 'Ã¥ »ùÇÃ6 ÀÔ´Ï´Ù.', 'book6.jpg');
+insert into ebook(bseq,  title, category, price, content, image, bestyn) values(
+product_seq.nextval, 'Ã¥7', '3', '0', 'Ã¥ »ùÇÃ7 ÀÔ´Ï´Ù.', 'book7.jpg', 'y');
+insert into ebook(bseq,  title, category, price, content, image, bestyn) values(
 product_seq.nextval, 'Ã¥8', '3', '6000', 'Ã¥ »ùÇÃ8 ÀÔ´Ï´Ù.', 'book8.jpg', 'y');
-insert into product(bseq,  title, category, price, content, image) values(
-product_seq.nextval,  'Ã¥9', '4', '15000', 'Ã¥ »ùÇÃ9 ÀÔ´Ï´Ù.', 'book9.jpg');
-insert into product(bseq,  title, category, price, content, image, bestyn) values(
+insert into ebook(bseq,  title, category, price, content, image) values(
+product_seq.nextval,  'Ã¥9', '4', '0', 'Ã¥ »ùÇÃ9 ÀÔ´Ï´Ù.', 'book9.jpg');
+insert into ebook(bseq,  title, category, price, content, image, bestyn) values(
 product_seq.nextval, 'Ã¥10', '6', '3000', 'Ã¥ »ùÇÃ10 ÀÔ´Ï´Ù.', 'book10.jpg','n');
-insert into product(bseq,  title, category, price, content, image, bestyn) values(
+insert into ebook(bseq,  title, category, price, content, image, bestyn) values(
 product_seq.nextval, 'Ã¥11', '5', '11000', 'Ã¥ »ùÇÃ11 ÀÔ´Ï´Ù.', 'book11.jpg','n');
-insert into product(bseq,  title, category, price, content, image, bestyn) values(
-product_seq.nextval, 'Ã¥12', '5', '12000', 'Ã¥ »ùÇÃ12 ÀÔ´Ï´Ù.', 'book11.jpg','n');
+insert into ebook(bseq,  title, category, price, content, image, bestyn) values(
+product_seq.nextval, 'Ã¥12', '4', '12000', 'Ã¥ »ùÇÃ12 ÀÔ´Ï´Ù.', 'book12.jpg','n');
+insert into ebook(bseq,  title, category, price, content, image, bestyn) values(
+product_seq.nextval, 'Ã¥13', '3', '11000', 'Ã¥ »ùÇÃ13 ÀÔ´Ï´Ù.', 'book13.jpg','y');
+insert into ebook(bseq,  title, category, price, content, image, bestyn) values(
+product_seq.nextval, 'Ã¥14', '2', '13000', 'Ã¥ »ùÇÃ14 ÀÔ´Ï´Ù.', 'book14.jpg','n');
+insert into ebook(bseq,  title, category, price, content, image, bestyn) values(
+product_seq.nextval, 'Ã¥15', '1', '4000', 'Ã¥ »ùÇÃ15 ÀÔ´Ï´Ù.', 'book15.jpg','y');
+
+UPDATE pro
 
 -- Àå¹Ù±¸´Ï
 insert into cart(cseq, id, bseq) values(cart_seq.nextval, 'one', 1);
