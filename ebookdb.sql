@@ -273,3 +273,45 @@ FROM (SELECT row_number() OVER(ORDER BY regdate)row_num, bseq, title,price_rent,
       FROM ebook
       WHERE price = 0 AND price_rent = 0)
 WHERE row_num <= 4 ;
+
+
+--장바구니 보기 View 생성
+--필요한 컬럼: 카트일련번호, 회원id, 책번호, 회원명, 책제목, 가격, 장바구니 등록일자, 처리결과
+--관련 테이블: cart, member, ebook
+--cart 데이터 확인을 위해 insert
+insert into cart(cseq, id, bseq) values(cart_seq.nextval, 'two', 3);
+commit;
+
+CREATE OR REPLACE VIEW cart_view AS
+SELECT c.cseq, c.id, c.bseq, m.name, e.title,
+        e.price, c.indate, c.result
+FROM cart c, member m, ebook e
+WHERE c.id = m.id
+AND c.bseq = e.bseq
+AND result = 'n';    --주문 미처리
+
+
+--찜하기 보기 View 생성
+--필요한 컬럼 : 책번호, 책제목, 가격, 사진
+--찜하기를 조회하기위한 update
+UPDATE ebook SET likeyn= 'y' WHERE bseq =6;
+commit;
+
+DROP VIEW like_view;
+
+CREATE OR REPLACE VIEW like_view AS
+SELECT bseq, title, price, image
+FROM (SELECT row_number() OVER(ORDER BY regdate)row_num, bseq, title, price, image
+      FROM ebook
+      WHERE likeyn = 'y')
+WHERE row_num <= 4 ;
+
+
+--주문 내역 조회 뷰 : order_view
+--컬러명: 주문상세번호, 주문번호, 회원ID, 책번호, 책제목, 회원명, 가격, 주문일, 처리결과
+CREATE OR REPLACE VIEW order_view AS
+SELECT d.odseq, o.oseq, o.id, e.bseq, e.title, m.name, e.price, o.indate, d.result
+FROM orders o, order_detail d, ebook e , member m 
+WHERE d.oseq = o.oseq
+AND e.bseq = d.bseq
+AND o.id=m.id;
