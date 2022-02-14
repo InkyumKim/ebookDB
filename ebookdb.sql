@@ -241,3 +241,35 @@ commit;
 --우편번호 테이블 생성 및 데이터 insert
 @zip;
 
+--조회시 간단하게 조회하기위해 뷰로 생성
+--베스트 셀러 조회 뷰
+DROP VIEW best_book_view;
+
+CREATE OR REPLACE VIEW best_book_view AS
+SELECT bseq, title,price_rent, price, image
+FROM (SELECT row_number() OVER(ORDER BY regdate)row_num, e.bseq, e.title,e.price_rent, e.price, e.image, r.rating
+      FROM ebook e, review r
+      WHERE e.bseq = r.bseq)
+WHERE row_num <= 4 ;
+
+
+--new_book 조회 뷰
+DROP VIEW new_book_view;
+
+CREATE OR REPLACE VIEW new_book_view AS
+SELECT bseq, title,price_rent, price, image
+FROM (SELECT row_number() OVER(ORDER BY regdate)row_num, bseq, title,price_rent, price, image
+      FROM ebook
+      WHERE useyn = 'y')
+WHERE row_num <= 4 ;
+
+
+--무료 책 조회
+DROP VIEW free_book_view;
+
+CREATE OR REPLACE VIEW free_book_view AS
+SELECT bseq, title,price_rent, price, image
+FROM (SELECT row_number() OVER(ORDER BY regdate)row_num, bseq, title,price_rent, price, image
+      FROM ebook
+      WHERE price = 0 AND price_rent = 0)
+WHERE row_num <= 4 ;
