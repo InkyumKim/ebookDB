@@ -69,6 +69,8 @@ CREATE TABLE review(
     id      VARCHAR2(20),
     bseq   NUMBER(5),
     rating  NUMBER(2,1),
+    content VARCHAR2(4000),
+    indate DATE DEFAULT SYSDATE,
     FOREIGN KEY (id) REFERENCES member(id),
     FOREIGN KEY (bseq) REFERENCES ebook(bseq)
 );
@@ -102,6 +104,9 @@ CREATE TABLE order_detail(
     FOREIGN KEY (oseq) REFERENCES orders(oseq),
     FOREIGN KEY (bseq) REFERENCES ebook(bseq)
 );
+
+ALTER TABLE order_detail ADD quantity NUMBER(5) DEFAULT 1;
+
 
 DROP SEQUENCE order_detail_seq;
 CREATE SEQUENCE order_detail_seq START WITH 1 INCREMENT BY 1;
@@ -151,6 +156,9 @@ insert into member(id, pwd, name, zip_num, address, phone) values
 ('one', '1111', '김형주', '06129', '서울특별시 강남구 역삼동 818-3', '017-777-7777');
 insert into member(id, pwd, name, zip_num, address, phone) values
 ('two', '2222', '김민진', '06129', '서울특별시 강남구 역삼동 818-3', '011-123-4567');
+UPDATE member SET email='abc@email.com' WHERE name='김형주';
+UPDATE member SET email='test@email.com' WHERE name='김민진';
+commit;
 
 --책
 insert into ebook(bseq, title, category, price_rent, price, content, image) values(
@@ -198,6 +206,9 @@ ebook_seq.nextval, '짙은', '6','0', '0', '칼잡이 지운과 목적 없이 살아가는 수한�
 -- 장바구니
 insert into cart(cseq, id, bseq) values(cart_seq.nextval, 'one', 1);
 
+--리뷰
+insert into review(rseq, id, bseq, rating) VALUES(review_seq.nextval,'one',1,5);
+
 -- 주문
 insert into orders(oseq, id) values(orders_seq.nextval, 'one');
 insert into orders(oseq, id) values(orders_seq.nextval, 'one');
@@ -222,7 +233,7 @@ values(order_detail_seq.nextval, 3, 1);
 -- QnA
 insert into qna (qseq, subject, content, id)
 values(qna_seq.nextval, '테스트', '질문내용1', 'one');
-update qna SET reply='답변내용', rep='y';
+update qna SET reply='답변내용', rep='n';
 
 insert into qna (qseq, subject, content, id)
 values(qna_seq.nextval, '테스트2', '질문내용2', 'one');
@@ -233,6 +244,25 @@ values(notice_seq.nextval, '공지1', '공지사항 샘플1');
 
 insert into notice (nseq, subject, content)
 values(notice_seq.nextval, '공지2', '공지사항 샘플2');
+
+insert into review(rseq, id, bseq, rating, content) 
+VALUES(review_seq.nextval, 'one', 1, 3, '너무 재밌어요!');
+insert into review(rseq, id, bseq, rating, content) 
+VALUES(review_seq.nextval, 'two', 1, 1, '처음엔 흥미로웠는데 뒤로갈수록 재미없어요');
+insert into review(rseq, id, bseq, rating, content) 
+VALUES(review_seq.nextval, 'one', 1, 4, '재미있습니다 시간가는줄모르고 봤어요');
+insert into review(rseq, id, bseq, rating, content) 
+VALUES(review_seq.nextval, 'two', 1,5, '가슴속에 잠자고 있던 따뜻한 감정을 일깨워 주는 감동의 소설이다. 가끔 가슴을 먹먹하게 하는 내용과 현 삶을 뒤돌아보게 하는 마력이 있는 소설이다.');
+insert into review(rseq, id, bseq, rating, content) 
+VALUES(review_seq.nextval, 'one', 1, 2, '재미있습니다 시간가는줄모르고 봤어요');
+insert into review(rseq, id, bseq, rating, content) 
+VALUES(review_seq.nextval, 'one', 1, 5, '돈값해요');
+insert into review(rseq, id, bseq, rating, content) 
+VALUES(review_seq.nextval, 'one', 1, 2, '왜보는지 모르겠어요');
+insert into review(rseq, id, bseq, rating, content) 
+VALUES(review_seq.nextval, 'one', 2, 3, '재미없어요');
+insert into review(rseq, id, bseq, rating, content) 
+VALUES(review_seq.nextval, 'one', 3, 3, '흥미로워요!');
 commit;
 
 
@@ -247,20 +277,9 @@ DROP VIEW best_book_view;
 
 CREATE OR REPLACE VIEW best_book_view AS
 SELECT bseq, title,price_rent, price, image
-FROM (SELECT row_number() OVER(ORDER BY regdate)row_num, e.bseq, e.title,e.price_rent, e.price, e.image, r.rating
-      FROM ebook e, review r
-      WHERE e.bseq = r.bseq)
-WHERE row_num <= 4 ;
-
-
---new_book 조회 뷰
-DROP VIEW new_book_view;
-
-CREATE OR REPLACE VIEW new_book_view AS
-SELECT bseq, title,price_rent, price, image
 FROM (SELECT row_number() OVER(ORDER BY regdate)row_num, bseq, title,price_rent, price, image
       FROM ebook
-      WHERE useyn = 'y')
+      WHERE bestyn = 'y')
 WHERE row_num <= 4 ;
 
 
@@ -281,6 +300,8 @@ WHERE row_num <= 4 ;
 --cart 데이터 확인을 위해 insert
 insert into cart(cseq, id, bseq) values(cart_seq.nextval, 'two', 3);
 commit;
+
+DROP VIEW cart_view;
 
 CREATE OR REPLACE VIEW cart_view AS
 SELECT c.cseq, c.id, c.bseq, m.name, e.title,
@@ -306,12 +327,132 @@ FROM (SELECT row_number() OVER(ORDER BY regdate)row_num, bseq, title, price, ima
       WHERE likeyn = 'y')
 WHERE row_num <= 4 ;
 
-
+DROP VIEW order_view;
 --주문 내역 조회 뷰 : order_view
 --컬러명: 주문상세번호, 주문번호, 회원ID, 책번호, 책제목, 회원명, 가격, 주문일, 처리결과
 CREATE OR REPLACE VIEW order_view AS
-SELECT d.odseq, o.oseq, o.id, e.bseq, e.title, m.name, e.price, o.indate, d.result
+SELECT d.odseq, o.oseq, o.id, e.bseq, e.title, m.name mname, d.quantity, e.price, o.indate, d.result
 FROM orders o, order_detail d, ebook e , member m 
 WHERE d.oseq = o.oseq
 AND e.bseq = d.bseq
 AND o.id=m.id;
+
+----------------------------------------------------------------
+
+--사용자별 주문내역 조회
+SELECT * FROM order_view
+WHERE id='one'
+AND result ='y'
+AND oseq = 2;
+
+
+--사용자별 주문번호 목록 조회
+SELECT distinct oseq FROM order_view
+WHERE id='one'
+AND result = 'y';
+
+
+--페이지별 상품목록 조회
+SELECT bseq, regdate, title, price, useyn, bestyn
+FROM    (SELECT row_number() over(ORDER BY name) rn, bseq, regdate, title, price, useyn, bestyn
+        FROM ebook    
+        WHERE name LIKE '%'||''||'%')
+WHERE rn <= 20 AND rn > 10; 
+
+
+---------------------------------------------
+--ebook테이블에 저자컬럼 추가
+ALTER TABLE ebook ADD author VARCHAR2(40);
+UPDATE ebook SET author='김호연' WHERE title='불편한 편의점';
+UPDATE ebook SET author='기욤 뮈소' WHERE title='센 강의 이름 모를 여인';
+UPDATE ebook SET author='최은영' WHERE title='밝은 밤';
+UPDATE ebook SET author='김미경' WHERE title='세븐 테크';
+UPDATE ebook SET author='로버트 기요사키' WHERE title='부자 아빠 가난한 아빠';
+UPDATE ebook SET author='앙드레 코스톨라니' WHERE title='돈, 뜨겁게 사랑하고 차갑게 다루어라';
+UPDATE ebook SET author='파스칼 브뤼크네르' WHERE title='아직 오지 않은 날들을 위하여';
+UPDATE ebook SET author='열린공감TV' WHERE title='윤석열 X파일';
+UPDATE ebook SET author='tvn 제작진' WHERE title='벌거벗은 세계사: 사건편';
+UPDATE ebook SET author='켈리 최' WHERE title='웰씽킹(Wealthinking)';
+UPDATE ebook SET author='권민창' WHERE title='잘 살아라 그게 최고의 복수다';
+UPDATE ebook SET author='후션즈' WHERE title='관계를 망치는 사람들을 위한 심리 처방전';
+UPDATE ebook SET author='김두루미' WHERE title='전직 아이돌의 배우 생활';
+UPDATE ebook SET author='이신유' WHERE title='만능 차트로 키우는 동물병원';
+UPDATE ebook SET author='제법넓은강' WHERE title='추방당한 각성자는 행복을 꿈꾼다';
+UPDATE ebook SET author='인기영' WHERE title='식사하고 가세요!';
+UPDATE ebook SET author='이정' WHERE title='아기가 생겼어요';
+UPDATE ebook SET author='이경하' WHERE title='짙은';
+commit;
+
+
+-----------------------------------------------
+--추가사항
+alter table ebook add rseq NUMBER (10);
+alter table ebook add ratingAvg NUMBER(2,1);
+alter table ebook add bestyn CHAR(1) DEFAULT 'n';
+
+-- 카테고리 별 조회
+select bseq, title, author, price, price_rent, image
+from ebook
+group by category
+having category=1;
+
+--new_book 조회 뷰
+DROP VIEW new_book_view;
+
+CREATE OR REPLACE VIEW new_book_view AS
+SELECT bseq, title, author, price, price_rent, image, ratingAvg, regdate
+FROM (SELECT row_number() OVER(ORDER BY regdate)row_num, bseq, title, author, price, price_rent, image, ratingAvg, regdate
+      FROM ebook
+      WHERE SUBSTR(REGDATE,0,8) BETWEEN (TO_CHAR(TRUNC(SYSDATE,'MM'),'YYYYMMDD') ) AND (LAST_DAY(SYSDATE))) 
+order by regdate desc;
+
+
+-- 리뷰 보기 View 생성
+-- 필요한 컬럼: 도서상품 번호, 리뷰 일련번호, 회원 id, 회원명, 상품명, 
+-- 등록일자, 별점, 내용
+-- 관련 테이블: cart, member, ebook
+CREATE OR REPLACE VIEW review_view AS
+SELECT e.bseq, r.rseq, m.id, m.name, e.title, r.indate, r.rating, r.content
+ FROM ebook e, review r, member m
+WHERE e.bseq=r.bseq  and r.id=m.id;
+
+
+-- 리뷰테이블에서 별점 평균을 구해서 ebook 테이블에 별점평균 업데이트
+update ebook
+set ratingAvg = (select r.avg from 
+(select bseq, avg(rating) as avg from review group by bseq) r where r.bseq =1)
+where bseq=1;
+
+
+--베스트 셀러 조회 뷰
+DROP VIEW best_book_view;
+
+CREATE OR REPLACE VIEW best_book_view AS
+SELECT bseq, title,price_rent, price, image
+FROM (SELECT row_number() OVER(ORDER BY regdate)row_num, bseq, title,price_rent, price, image
+      FROM ebook
+      WHERE bestyn = 'y')
+WHERE row_num <= 4 ;
+
+
+--wishlist
+DROP TABLE wishlist;
+
+CREATE TABLE wishlist(
+    wseq    NUMBER(10)  PRIMARY KEY,
+    bseq    NUMBER(5),
+    id      VARCHAR2(20), 
+     FOREIGN KEY (bseq) REFERENCES ebook(bseq),
+     FOREIGN KEY (id) REFERENCES member(id)
+ );
+    
+DROP SEQUENCE wishlist_seq;
+CREATE SEQUENCE wishlist_seq START WITH 1 INCREMENT BY 1;
+
+
+
+--WISHLIST view
+CREATE OR REPLACE VIEW wishlist_view AS
+SELECT w.wseq, e.bseq, m.id  ,e.title, e.price
+FROM wishlist w, member m, ebook e
+WHERE m.id=w.id;
