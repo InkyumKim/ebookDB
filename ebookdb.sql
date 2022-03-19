@@ -388,13 +388,13 @@ commit;
 --추가사항
 alter table ebook add rseq NUMBER (10);
 alter table ebook add ratingAvg NUMBER(2,1);
-alter table ebook add bestyn CHAR(1) DEFAULT 'n';
 
--- 카테고리 별 조회
-select bseq, title, author, price, price_rent, image
-from ebook
-group by category
-having category=1;
+alter table ebook add bestyn CHAR(1) DEFAULT 'n';
+UPDATE ebook SET bestyn = 'y' WHERE title= '벌거벗은 세계사: 사건편';
+UPDATE ebook SET bestyn = 'y' WHERE title= '부자 아빠 가난한 아빠';
+UPDATE ebook SET bestyn = 'y' WHERE title= '짙은';
+UPDATE ebook SET bestyn = 'y' WHERE title= '아직 오지 않은 날들을 위하여';
+commit;
 
 --new_book 조회 뷰
 DROP VIEW new_book_view;
@@ -433,6 +433,7 @@ FROM (SELECT row_number() OVER(ORDER BY regdate)row_num, bseq, title,price_rent,
       FROM ebook
       WHERE bestyn = 'y')
 WHERE row_num <= 4 ;
+
 
 
 --wishlist
