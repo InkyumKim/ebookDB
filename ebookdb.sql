@@ -450,8 +450,6 @@ DROP SEQUENCE wishlist_seq;
 CREATE SEQUENCE wishlist_seq START WITH 1 INCREMENT BY 1;
 
 
-
-
 --WISHLIST view
 CREATE OR REPLACE VIEW wishlist_view AS
 SELECT w.wseq, e.bseq, m.id  ,e.title, e.price
