@@ -231,19 +231,90 @@ insert into order_detail(odseq, oseq, bseq)
 values(order_detail_seq.nextval, 3, 1);
 
 -- QnA
-insert into qna (qseq, subject, content, id)
-values(qna_seq.nextval, '테스트', '질문내용1', 'one');
-update qna SET reply='답변내용', rep='n';
+DELETE FROM qna WHERE subject='테스트';
+DELETE FROM qna WHERE subject='테스트2';
 
-insert into qna (qseq, subject, content, id)
-values(qna_seq.nextval, '테스트2', '질문내용2', 'one');
+insert into qna (qseq, subject, content, reply, id, rep)
+values(qna_seq.nextval, '비회원 주문', '비회원도 주문할 수 있나요?',  '
+비회원은 구매 불가능합니다.
+eBook 콘텐츠는 불법적인 복제와 유통을 막기 위해 지원되는 디지털저작권관리기술로서, 
+이 기술에 의해서는 적절한 요금을 지불하거나 적법한 권한을 가진 사용자만이 콘텐츠를 사용할 수 있습니다.', 'one' ,'y');
+insert into qna (qseq, subject, content, reply, id, rep)
+values(qna_seq.nextval, '환불', '환불이 가능한가요?',  '
+ebook은 환불이 불가능합니다.
+항상 이용해 주셔서 감사합니다.', 'one' ,'y');
+insert into qna (qseq, subject, content, reply, id, rep)
+values(qna_seq.nextval, '무료', '무료로 이용이 가능한가요?',  '
+무료로 서비스중인 ebook이 있습니다.
+무료 ebook을 구매하셔서 이용하시기 바랍니다.', 'one' ,'y');
+insert into qna (qseq, subject, content, reply, id, rep)
+values(qna_seq.nextval, '회원가입', '회원가입 어떻게 하나요?',  '
+회원가입 누르시고 
+-> 약관 동의 
+-> 빈 칸 입력
+-> 가입완료의 단계를 거쳐 개인회원가입이 가능합니다.', 'two' ,'y');
+insert into qna (qseq, subject, content, reply, id, rep)
+values(qna_seq.nextval, '주문수정', '주문수정 할 수 있나요?',  '
+eBook은 구매 후 10분 이내 주문취소 가능합니다.
+감사합니다.', 'two' ,'y');
+insert into qna (qseq, subject, content,  id)
+values(qna_seq.nextval, 'ebook 보는 방법', 'ebook 보는 방법 알려주세요!','two');
+commit;
+
 
 -- notice
 insert into notice (nseq, subject, content)
-values(notice_seq.nextval, '공지1', '공지사항 샘플1');
+values(notice_seq.nextval, '이용약관 변경', '
+[변경내용]
+
+1. 약관의 신설
+1) 제 2조 (정의) 4항
+2) 제 5조 (서비스의 중단) 4항
+3) 제 8조 (정의 및 가입) 4항, 5항, 9항
+4) 제 9조 (이용자의 의무) 2항
+5) 제 12조 (구매신청) 4항, 6항
+6) 제 13조 (계약의 성립) 3항
+7) 제 19조 (저작권의 귀속 및 이용제한) 3항, 4항
+8) 제 24조 (사이버머니)
+9) 제 25조 (고객예치금)');
 
 insert into notice (nseq, subject, content)
-values(notice_seq.nextval, '공지2', '공지사항 샘플2');
+values(notice_seq.nextval, '일부 서비스 점검 안내', '
+시스템점검 작업으로 아래 서비스가 일시 중단될 예정입니다.
+아래 서비스를 제외한 모든 서비스를 정상적으로 이용 가능 합니다.
+ 
+○ 서비스 중단 일정 : 2022년 3월 1일(화) 23:00 ~ 2022월 3월 2일(수) 06:00 (총 7시간)
+
+○ 서비스 중단대상 : 
+ - 회원가입 및 탈퇴
+ - 회원정보 수정
+ - 무인가입기
+ - 회원제휴
+ 
+ 신속하게 작업을 마쳐 고객님께 원활한 서비스를 제공할 수 있도록 하겠습니다.');
+ 
+ insert into notice (nseq, subject, content)
+values(notice_seq.nextval, '개인정보처리방침', '
+개정된 이용약관 및 개인정보처리방침은 2022년 3월 13일부터 적용됩니다.
+
+개정된 이용약관 및 개인정보처리방침 내용에 대한 문의사항이 있으신 경우
+고객상담팀으로 문의하시면 신속하고 친절하게 안내해드리겠습니다.
+감사합니다.');
+
+ insert into notice (nseq, subject, content)
+values(notice_seq.nextval, '마케팅정보 수신동의', '
+정보통신망 이용촉진 및 정보보호 등에 관한 법률에 따라
+마케팅 정보 수신에 동의한 경우 동의사실을 매2년마다 안내해드립니다.
+
+※ 별도 의사 표현이 없으실 경우, 동의정보가 2년 자동연장 됩니다.');
+
+ insert into notice (nseq, subject, content)
+values(notice_seq.nextval, '개인정보 이용내역', '
+개인정보 보호법 및 동법 시행령에 따라 개인정보 이용내역을 안내해 드립니다.
+회사는 회원가입, 회원 관리 등 각종 서비스의 제공을 위해 개인정보를 수집하고 있습니다.
+회사는 이용자가 제공한 모든 정보를 상기 목적에 필요한 용도 이외로는 사용하지 않으며, 
+이용 목적이 변경될 시에는 사전에 별도 동의를 구할 것입니다.');
+commit;
 
 insert into review(rseq, id, bseq, rating, content) 
 VALUES(review_seq.nextval, 'one', 1, 3, '너무 재밌어요!');
@@ -396,6 +467,7 @@ UPDATE ebook SET bestyn = 'y' WHERE title= '짙은';
 UPDATE ebook SET bestyn = 'y' WHERE title= '아직 오지 않은 날들을 위하여';
 commit;
 
+
 --new_book 조회 뷰
 DROP VIEW new_book_view;
 
@@ -435,7 +507,6 @@ FROM (SELECT row_number() OVER(ORDER BY regdate)row_num, bseq, title,price_rent,
 WHERE row_num <= 4 ;
 
 
-
 --wishlist
 DROP TABLE wishlist;
 
@@ -449,6 +520,7 @@ CREATE TABLE wishlist(
     
 DROP SEQUENCE wishlist_seq;
 CREATE SEQUENCE wishlist_seq START WITH 1 INCREMENT BY 1;
+
 
 
 --WISHLIST view
